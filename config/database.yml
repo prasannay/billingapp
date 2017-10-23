@@ -65,13 +65,13 @@ test:
   socket: /tmp/mysql.sock
 
 production:
-  adapter: mysql2
-  database: sample_db
+  adapter: postgresql
+  database: d55sckstvjkcup
   pool: 40
   timeout: 5000    
-  username: root
-  password: 
-  host: localhost
+  username: wqjdbhawnblkeg
+  password: 865fac2727a21ab1e38ce625c630ae10c66d2293e45f6c9ee9e23362c1c06887
+  host: ec2-54-243-43-72.compute-1.amazonaws.com
   socket: /tmp/mysql.sock
   
 

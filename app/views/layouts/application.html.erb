@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Billing App</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <span style="text-align:center"><h3> Billing Application</h3></span>
+	<%if current_user.present?%>
+	    <span style='float:right'><%= link_to('Logout', destroy_user_session_path, method: :delete) %></span>
+	    <h3>Login ID : <span><%=current_user.email%></span></h3><br /><br />
+    <%end%>
+  </head>
+
+  <body>
+    <%= yield %>
+    <% date_arr, user_wise_hash, event_arr = Billing.final_computed_amount %>
+    <%if date_arr.present? && current_user.present? %>
+		  <br /><br /><table border = "1px" >
+	    	<tr>
+	    		<th>Date</th>
+	    		<th>Event</th>
+	    		<th>Need To Pay (A)</th>
+	    		<th>Need To Collect (B)<th>
+	    	</tr>
+	    	<% 
+		    	total_min_paid = 0.0
+		    	total_max_paid = 0.0
+	    	 %>
+		    <% date_arr.each do |date| %>
+		    	<% event_arr.each do |evt| %>
+				    <% user_amt_col = user_wise_hash["#{current_user.id}-#{date}-#{evt}"] %>
+				    <tr>
+				    	<td><%=date.strftime("%d/%b/%Y")%></td>
+				    	<td><%=Billing.get_event_name(evt)%>
+				    	<td><%=min_paid = user_amt_col[0].round(2)%></td>
+				    	<td><%=max_paid = user_amt_col[1].round(2)%></td>
+				    	<%
+				    		total_min_paid += min_paid
+				    		total_max_paid += max_paid
+				    	%>
+				    </tr>
+			    <%end%>
+			    <tr>
+			    <td colspan="2">Total</td>
+			     <td><%=total_min_paid%></td>
+			     <td><%=total_max_paid%></td>
+			    </tr>
+		    <%end%>
+		  </table>
+		    <% if total_min_paid <= total_max_paid %>
+		    	<h3>Total Need to Collect (B-A): <%= total_max_paid - total_min_paid %></h3>
+		    <%else%>
+		    	<h3>Total Need to Pay (A-B): <%= total_min_paid - total_max_paid %></h3>
+		    <%end%>
+    <%end%>
+  </body>
+</html>

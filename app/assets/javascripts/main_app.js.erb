@@ -1,0 +1,26 @@
+
+
+function onlyNumerals(evt,val){
+       evt = (evt) ? evt : event;
+        var charCode = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode :
+           ((evt.which) ? evt.which : 0));
+        // 37 => Left Arrow 39 => Right arrow
+    if(evt.ctrlKey == true) {
+      if (charCode == 65 || charCode == 67 || charCode == 86 || charCode == 88 || charCode == 97 || charCode == 99 || charCode == 118 || charCode == 120){
+         return true;
+      }
+    }	  
+	if(charCode == 46 || charCode == 37 || charCode == 39 || charCode == 118 || charCode == 99)
+	{	
+		var index = val.lastIndexOf(".");
+		if( index >= 0)
+		{
+			return false;
+		}
+		return true;
+	}
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {		
+      return false;
+	}
+	return true;
+}
